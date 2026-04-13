@@ -4,30 +4,36 @@ import React from 'react';
 import { HapticTab } from '@/components/haptic-tab';
 import { IconSymbol } from '@/components/ui/icon-symbol';
 import { Colors } from '@/constants/theme';
-import { useColorScheme } from '@/hooks/use-color-scheme';
+import { useColorScheme } from 'nativewind';
 
 export default function TabLayout() {
-  const colorScheme = useColorScheme();
+  const { colorScheme } = useColorScheme();
+  const isDark = colorScheme === 'dark';
 
   return (
     <Tabs
       screenOptions={{
-        tabBarActiveTintColor: Colors[colorScheme ?? 'light'].tint,
+        tabBarActiveTintColor: isDark ? '#ffffff' : Colors.light.tint,
         headerShown: false,
         tabBarButton: HapticTab,
+        sceneStyle: { backgroundColor: isDark ? '#030712' : '#ffffff' },
+        tabBarStyle: {
+          backgroundColor: isDark ? '#030712' : '#ffffff',
+          borderTopColor: isDark ? '#1f2937' : '#e5e7eb',
+        }
       }}>
       <Tabs.Screen
         name="index"
         options={{
-          title: 'Home',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="house.fill" color={color} />,
+          title: 'Subjects',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="book.fill" color={color} />,
         }}
       />
       <Tabs.Screen
         name="explore"
         options={{
-          title: 'Explore',
-          tabBarIcon: ({ color }) => <IconSymbol size={28} name="paperplane.fill" color={color} />,
+          title: 'Bookmarks',
+          tabBarIcon: ({ color }) => <IconSymbol size={28} name="bookmark.fill" color={color} />,
         }}
       />
     </Tabs>

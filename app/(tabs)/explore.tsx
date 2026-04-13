@@ -1,112 +1,91 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import React, { useState, useEffect } from 'react';
+import { View, Text, FlatList, TouchableOpacity } from 'react-native';
+import { SafeAreaView } from 'react-native-safe-area-context';
+import { useRouter, useFocusEffect } from 'expo-router';
+import { Ionicons } from '@expo/vector-icons';
+import { BookmarkService } from '@/constants/BookmarkService';
+import { NOTES_DATA } from '@/constants/NotesData';
 
-import { Collapsible } from '@/components/ui/collapsible';
-import { ExternalLink } from '@/components/external-link';
-import ParallaxScrollView from '@/components/parallax-scroll-view';
-import { ThemedText } from '@/components/themed-text';
-import { ThemedView } from '@/components/themed-view';
-import { IconSymbol } from '@/components/ui/icon-symbol';
-import { Fonts } from '@/constants/theme';
+export default function BookmarksScreen() {
+  const [bookmarkedTopics, setBookmarkedTopics] = useState<any[]>([]);
+  const router = useRouter();
 
-export default function TabTwoScreen() {
+  // Refresh bookmarks whenever the screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      loadBookmarks();
+    }, [])
+  );
+
+  const loadBookmarks = async () => {
+    const ids = await BookmarkService.getBookmarks();
+    const allTopics: any[] = [];
+    
+    // Find matching topics across all subjects
+    NOTES_DATA.forEach(subject => {
+      subject.topics.forEach(topic => {
+        if (ids.includes(topic.id)) {
+          allTopics.push({ ...topic, subjectId: subject.id, subjectColor: subject.color });
+        }
+      });
+    });
+    
+    setBookmarkedTopics(allTopics);
+  };
+
+  const renderItem = ({ item }: { item: any }) => (
+    <TouchableOpacity
+      onPress={() => router.push(`/topic/${item.subjectId}/${item.id}`)}
+      activeOpacity={0.7}
+      className="mb-4 flex-row items-center p-4 rounded-xl bg-gray-50 dark:bg-gray-900 border border-gray-100 dark:border-gray-800"
+    >
+      <View
+        className="w-10 h-10 rounded-full items-center justify-center mr-4"
+        style={{ backgroundColor: item.subjectColor + '20' }}
+      >
+        <Ionicons name="document-text" size={20} color={item.subjectColor} />
+      </View>
+      <View className="flex-1">
+        <Text className="text-lg font-bold text-gray-800 dark:text-gray-100">
+          {item.title}
+        </Text>
+      </View>
+      <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+    </TouchableOpacity>
+  );
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#D0D0D0', dark: '#353636' }}
-      headerImage={
-        <IconSymbol
-          size={310}
-          color="#808080"
-          name="chevron.left.forwardslash.chevron.right"
-          style={styles.headerImage}
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950">
+      <View className="px-5 pt-8 pb-4">
+        <Text className="text-3xl font-extrabold text-gray-900 dark:text-gray-50">
+          Bookmarks
+        </Text>
+        <Text className="text-gray-500 dark:text-gray-400 mt-1">
+          Your saved technical documentation
+        </Text>
+      </View>
+      
+      {bookmarkedTopics.length > 0 ? (
+        <FlatList
+          data={bookmarkedTopics}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+          contentContainerStyle={{ paddingHorizontal: 20, paddingTop: 10, paddingBottom: 40 }}
+          showsVerticalScrollIndicator={false}
         />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText
-          type="title"
-          style={{
-            fontFamily: Fonts.rounded,
-          }}>
-          Explore
-        </ThemedText>
-      </ThemedView>
-      <ThemedText>This app includes example code to help you get started.</ThemedText>
-      <Collapsible title="File-based routing">
-        <ThemedText>
-          This app has two screens:{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">app/(tabs)/explore.tsx</ThemedText>
-        </ThemedText>
-        <ThemedText>
-          The layout file in <ThemedText type="defaultSemiBold">app/(tabs)/_layout.tsx</ThemedText>{' '}
-          sets up the tab navigator.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/router/introduction">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Android, iOS, and web support">
-        <ThemedText>
-          You can open this project on Android, iOS, and the web. To open the web version, press{' '}
-          <ThemedText type="defaultSemiBold">w</ThemedText> in the terminal running this project.
-        </ThemedText>
-      </Collapsible>
-      <Collapsible title="Images">
-        <ThemedText>
-          For static images, you can use the <ThemedText type="defaultSemiBold">@2x</ThemedText> and{' '}
-          <ThemedText type="defaultSemiBold">@3x</ThemedText> suffixes to provide files for
-          different screen densities
-        </ThemedText>
-        <Image
-          source={require('@/assets/images/react-logo.png')}
-          style={{ width: 100, height: 100, alignSelf: 'center' }}
-        />
-        <ExternalLink href="https://reactnative.dev/docs/images">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Light and dark mode components">
-        <ThemedText>
-          This template has light and dark mode support. The{' '}
-          <ThemedText type="defaultSemiBold">useColorScheme()</ThemedText> hook lets you inspect
-          what the user&apos;s current color scheme is, and so you can adjust UI colors accordingly.
-        </ThemedText>
-        <ExternalLink href="https://docs.expo.dev/develop/user-interface/color-themes/">
-          <ThemedText type="link">Learn more</ThemedText>
-        </ExternalLink>
-      </Collapsible>
-      <Collapsible title="Animations">
-        <ThemedText>
-          This template includes an example of an animated component. The{' '}
-          <ThemedText type="defaultSemiBold">components/HelloWave.tsx</ThemedText> component uses
-          the powerful{' '}
-          <ThemedText type="defaultSemiBold" style={{ fontFamily: Fonts.mono }}>
-            react-native-reanimated
-          </ThemedText>{' '}
-          library to create a waving hand animation.
-        </ThemedText>
-        {Platform.select({
-          ios: (
-            <ThemedText>
-              The <ThemedText type="defaultSemiBold">components/ParallaxScrollView.tsx</ThemedText>{' '}
-              component provides a parallax effect for the header image.
-            </ThemedText>
-          ),
-        })}
-      </Collapsible>
-    </ParallaxScrollView>
+      ) : (
+        <View className="flex-1 items-center justify-center p-10">
+          <View className="w-20 h-20 bg-gray-50 dark:bg-gray-900 rounded-full items-center justify-center mb-4 border border-gray-100 dark:border-gray-800">
+            <Ionicons name="bookmark-outline" size={40} color="#9ca3af" />
+          </View>
+          <Text className="text-xl font-bold text-gray-800 dark:text-gray-100 mb-2">
+            No bookmarks yet
+          </Text>
+          <Text className="text-center text-gray-500 dark:text-gray-400 leading-6">
+            Topics you bookmark will appear here for quick access offline.
+          </Text>
+        </View>
+      )}
+    </SafeAreaView>
   );
 }
-
-const styles = StyleSheet.create({
-  headerImage: {
-    color: '#808080',
-    bottom: -90,
-    left: -35,
-    position: 'absolute',
-  },
-  titleContainer: {
-    flexDirection: 'row',
-    gap: 8,
-  },
-});
