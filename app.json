@@ -1,5 +1,6 @@
 {
   "expo": {
+    "sdkVersion": "54.0.0",
     "name": "NotesByAmanSir",
     "slug": "NotesByAmanSir",
     "version": "1.0.0",
@@ -7,9 +8,9 @@
     "icon": "./assets/images/icon.png",
     "scheme": "notesbyamansir",
     "userInterfaceStyle": "automatic",
-    "newArchEnabled": true,
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "in.iamandroid"
     },
     "android": {
       "adaptiveIcon": {
@@ -19,7 +20,8 @@
         "monochromeImage": "./assets/images/android-icon-monochrome.png"
       },
       "edgeToEdgeEnabled": true,
-      "predictiveBackGestureEnabled": false
+      "predictiveBackGestureEnabled": false,
+      "package": "in.iamandroid"
     },
     "web": {
       "output": "static",
@@ -33,16 +35,22 @@
           "image": "./assets/images/splash-icon.png",
           "imageWidth": 200,
           "resizeMode": "contain",
-        "backgroundColor": "#030712",
-        "dark": {
-          "backgroundColor": "#030712"
-        }
+          "backgroundColor": "#030712",
+          "dark": {
+            "backgroundColor": "#030712"
+          }
         }
       ]
     ],
     "experiments": {
       "typedRoutes": true,
       "reactCompiler": true
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "22521433-5410-472e-aaf4-a291ce5801d4"
+      }
     }
   }
 }
