@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import React, { useCallback, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
 import { useRouter, useFocusEffect } from 'expo-router';
@@ -10,14 +10,7 @@ export default function BookmarksScreen() {
   const [bookmarkedTopics, setBookmarkedTopics] = useState<any[]>([]);
   const router = useRouter();
 
-  // Refresh bookmarks whenever the screen is focused
-  useFocusEffect(
-    React.useCallback(() => {
-      loadBookmarks();
-    }, [])
-  );
-
-  const loadBookmarks = async () => {
+  const loadBookmarks = useCallback(async () => {
     const ids = await BookmarkService.getBookmarks();
     const allTopics: any[] = [];
     
@@ -31,7 +24,14 @@ export default function BookmarksScreen() {
     });
     
     setBookmarkedTopics(allTopics);
-  };
+  }, []);
+
+  // Refresh bookmarks whenever the screen is focused
+  useFocusEffect(
+    React.useCallback(() => {
+      loadBookmarks();
+    }, [loadBookmarks])
+  );
 
   const renderItem = ({ item }: { item: any }) => (
     <TouchableOpacity

@@ -1,10 +1,14 @@
-import React from 'react';
-import { TouchableOpacity } from 'react-native';
-import { useColorScheme } from 'nativewind';
+import { TouchableOpacity, useColorScheme } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
+import { useColorScheme as useNativewindColorScheme } from 'nativewind';
 
 export function ThemeToggle() {
-  const { colorScheme, toggleColorScheme } = useColorScheme();
+  const systemColorScheme = useColorScheme();
+  const { colorScheme, toggleColorScheme } = useNativewindColorScheme();
+
+  // Use nativewind's colorScheme which can be toggled manually,
+  // fall back to system scheme on first render
+  const isDark = colorScheme ? colorScheme === 'dark' : systemColorScheme === 'dark';
 
   return (
     <TouchableOpacity
@@ -13,9 +17,9 @@ export function ThemeToggle() {
       activeOpacity={0.7}
     >
       <Ionicons
-        name={colorScheme === 'dark' ? 'sunny' : 'moon'}
+        name={isDark ? 'sunny' : 'moon'}
         size={20}
-        color={colorScheme === 'dark' ? '#fbbf24' : '#4b5563'}
+        color={isDark ? '#fbbf24' : '#4b5563'}
       />
     </TouchableOpacity>
   );

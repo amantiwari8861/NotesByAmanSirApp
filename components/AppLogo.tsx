@@ -1,18 +1,17 @@
-import React from 'react';
-import { View, Text } from 'react-native';
 import { Ionicons } from '@expo/vector-icons';
-import { useColorScheme } from 'nativewind';
+import { Text, View } from 'react-native';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export const AppLogo = ({ size = 40 }: { size?: number }) => {
-  const { colorScheme } = useColorScheme();
+  const colorScheme = useColorScheme();
   const isDark = colorScheme === 'dark';
 
   return (
     <View className="flex-row items-center">
-      <View 
-        style={{ 
-          width: size, 
-          height: size, 
+      <View
+        style={{
+          width: size,
+          height: size,
           borderRadius: size * 0.25,
           backgroundColor: isDark ? '#3b82f6' : '#2563eb',
           alignItems: 'center',
@@ -30,7 +29,7 @@ export const AppLogo = ({ size = 40 }: { size?: number }) => {
         <Text className="text-xl font-black text-gray-900 dark:text-white leading-tight">
           NotesBy
         </Text>
-        <Text 
+        <Text
           className="text-lg font-bold leading-tight"
           style={{ color: isDark ? '#60a5fa' : '#2563eb' }}
         >

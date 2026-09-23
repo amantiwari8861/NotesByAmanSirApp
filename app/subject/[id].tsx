@@ -5,12 +5,12 @@ import { useLocalSearchParams, useRouter, Stack } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { NOTES_DATA } from '@/constants/NotesData';
 import { ThemeToggle } from '@/components/ThemeToggle';
-import { useColorScheme } from 'nativewind';
+import { useColorScheme } from '@/hooks/use-color-scheme';
 
 export default function SubjectDetailScreen() {
   const { id } = useLocalSearchParams();
   const router = useRouter();
-  const { colorScheme } = useColorScheme();
+  const colorScheme = useColorScheme();
   
   const subject = NOTES_DATA.find((s) => s.id === id);
 
@@ -39,7 +39,19 @@ export default function SubjectDetailScreen() {
       <Text className="flex-1 text-lg font-semibold text-gray-800 dark:text-gray-100">
         {item.title}
       </Text>
-      <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+        <View className="flex-row items-center">
+          {item.quiz?.length ? (
+            <View className="mr-2 w-7 h-7 rounded-full items-center justify-center" style={{ backgroundColor: subject.color + '22' }}>
+              <Ionicons name="help-circle" size={16} color={subject.color} />
+            </View>
+          ) : null}
+          {item.flashcards?.length ? (
+            <View className="mr-2 w-7 h-7 rounded-full items-center justify-center" style={{ backgroundColor: subject.color + '22' }}>
+              <Ionicons name="layers" size={16} color={subject.color} />
+            </View>
+          ) : null}
+          <Ionicons name="chevron-forward" size={18} color="#9ca3af" />
+        </View>
     </TouchableOpacity>
   );
 
