@@ -18,7 +18,8 @@
         "monochromeImage": "./assets/images/adaptive-icon-monochrome.png"
       },
       "predictiveBackGestureEnabled": false,
-      "package": "in.iamandroid"
+      "package": "in.iamandroid",
+      "versionCode": 2
     },
     "web": {
       "output": "static",
