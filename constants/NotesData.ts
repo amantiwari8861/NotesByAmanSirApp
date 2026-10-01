@@ -17,7 +17,7 @@ export interface Topic {
   title: string;
   content: string;
   code?: string;
-  images?: string[];
+  images?: (string | number)[];
   image?: any;
   quiz?: QuizQuestion[];
   flashcards?: Flashcard[];
@@ -45,6 +45,7 @@ export const NOTES_DATA: Subject[] = [
       {
         id: 'arrays',
         title: 'Arrays',
+        images: [ASSETS.arrayDiagram],
         content:
           'An array is a collection of items stored at contiguous memory locations. The idea is to store multiple items of the same type together so that each element can be accessed directly by its index in O(1) time. Because the memory is contiguous, arrays have excellent cache locality, but inserting or deleting elements in the middle requires shifting neighbouring elements.',
         code: `// C++ snippet
@@ -96,6 +97,7 @@ cout << arr[2]; // 3 (O(1) random access)`,
       {
         id: 'linked-list',
         title: 'Linked Lists',
+        images: [ASSETS.linkedListDiagram],
         content:
           'A linked list is a linear data structure in which elements are stored in nodes, and each node points to the next one. Unlike arrays, elements are not stored at contiguous memory locations. Linked lists grow and shrink dynamically, and insertion/deletion at the head costs O(1), but accessing the k-th element requires traversing from the head (O(n)).',
         code: `class Node {
@@ -148,6 +150,7 @@ cout << arr[2]; // 3 (O(1) random access)`,
       {
         id: 'stacks-queues',
         title: 'Stacks & Queues',
+        images: [ASSETS.stackDiagram],
         content:
           'Stacks and queues are linear data structures that restrict how elements are added and removed. A stack follows LIFO (Last In, First Out) — push adds to the top and pop removes from the top. A queue follows FIFO (First In, First Out) — enqueue adds to the rear and dequeue removes from the front. Applications include the call stack and undo history (stack) and scheduling, buffers and BFS (queue).',
         code: `// Stack operations (all O(1))
@@ -587,6 +590,7 @@ readyQueue = [P1, P2, P3]
       {
         id: 'osi-model',
         title: 'OSI Model',
+        images: [ASSETS.osiDiagram],
         content:
           'The Open Systems Interconnection (OSI) model describes seven layers that computer systems use to communicate over a network: Physical, Data Link, Network, Transport, Session, Presentation and Application. Each layer serves the layer above it and uses the layer below it. The Network layer handles addressing and routing, the Transport layer provides end-to-end delivery (TCP/UDP), and the Application layer is where protocols like HTTP, DNS and SMTP live.',
         code: `7 Application  (HTTP, DNS, SMTP)

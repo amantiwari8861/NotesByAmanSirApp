@@ -17,6 +17,8 @@ export default function TabLayout() {
         headerShown: false,
         tabBarButton: HapticTab,
         sceneStyle: { backgroundColor: isDark ? '#030712' : '#ffffff' },
+        tabBarLabelStyle: { fontSize: 12, fontWeight: '600', paddingBottom: 2 },
+        tabBarItemStyle: { paddingTop: 4 },
         tabBarStyle: {
           backgroundColor: isDark ? '#030712' : '#ffffff',
           borderTopColor: isDark ? '#1f2937' : '#e5e7eb',

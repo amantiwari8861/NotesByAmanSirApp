@@ -55,7 +55,7 @@ export default function BookmarksScreen() {
   );
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950">
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={['top', 'left', 'right']}>
       <View className="px-5 pt-8 pb-4">
         <Text className="text-3xl font-extrabold text-gray-900 dark:text-gray-50">
           Bookmarks

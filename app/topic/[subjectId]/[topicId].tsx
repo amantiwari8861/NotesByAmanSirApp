@@ -1,9 +1,11 @@
 import { Stack, useLocalSearchParams, useRouter, type Href } from 'expo-router';
 import React, { useEffect, useMemo, useState } from 'react';
-import { Animated, Modal, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
+import { Animated, Modal, Platform, ScrollView, Text, TextInput, TouchableOpacity, View } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
+import { Image } from 'expo-image';
 import { ThemeToggle } from '@/components/ThemeToggle';
 import { BookmarkService } from '@/constants/BookmarkService';
+import { shareTopicPdf } from '@/constants/ExportService';
 import { NOTES_DATA } from '@/constants/NotesData';
 import { ProgressService } from '@/constants/ProgressService';
 import { NotesService } from '@/constants/NotesService';
@@ -67,6 +69,12 @@ export default function TopicContentScreen() {
     showCustomToast(result ? 'Added to Bookmarks' : 'Removed from Bookmarks');
   };
 
+  const downloadPdf = async () => {
+    if (!subject || !topic) return;
+    const ok = await shareTopicPdf(subject, topic);
+    showCustomToast(ok ? 'PDF ready - choose where to save' : 'Sharing not available');
+  };
+
   if (!subject || !topic) {
     return (
       <View className="flex-1 items-center justify-center dark:bg-gray-950">
@@ -108,30 +116,42 @@ export default function TopicContentScreen() {
           {topic.title}
         </Text>
 
-        {(topic.quiz?.length || 0) > 0 || (topic.flashcards?.length || 0) > 0 ? (
-          <View className="flex-row gap-3 mb-8">
-            {(topic.quiz?.length || 0) > 0 && (
-              <TouchableOpacity
-                onPress={() => router.push(`/quiz/${subject.id}/${topic.id}` as Href)}
-                activeOpacity={0.8}
-                className="flex-1 flex-row items-center justify-center py-3 rounded-2xl bg-blue-600"
-              >
-                <Ionicons name="help-circle" size={18} color="white" />
-                <Text className="text-white font-bold ml-2">Practice Quiz</Text>
-              </TouchableOpacity>
-            )}
-            {(topic.flashcards?.length || 0) > 0 && (
-              <TouchableOpacity
-                onPress={() => router.push(`/flashcards/${subject.id}/${topic.id}` as Href)}
-                activeOpacity={0.8}
-                className="flex-1 flex-row items-center justify-center py-3 rounded-2xl bg-violet-600"
-              >
-                <Ionicons name="layers" size={18} color="white" />
-                <Text className="text-white font-bold ml-2">Flashcards</Text>
-              </TouchableOpacity>
-            )}
-          </View>
-        ) : null}
+        <View className="mb-8">
+          {(topic.quiz?.length || 0) > 0 || (topic.flashcards?.length || 0) > 0 ? (
+            <View className="flex-row gap-3 mb-3">
+              {(topic.quiz?.length || 0) > 0 && (
+                <TouchableOpacity
+                  onPress={() => router.push(`/quiz/${subject.id}/${topic.id}` as Href)}
+                  activeOpacity={0.8}
+                  className="flex-1 flex-row items-center justify-center py-3 rounded-2xl bg-blue-600"
+                >
+                  <Ionicons name="help-circle" size={18} color="white" />
+                  <Text className="text-white font-bold ml-2">Practice Quiz</Text>
+                </TouchableOpacity>
+              )}
+              {(topic.flashcards?.length || 0) > 0 && (
+                <TouchableOpacity
+                  onPress={() => router.push(`/flashcards/${subject.id}/${topic.id}` as Href)}
+                  activeOpacity={0.8}
+                  className="flex-1 flex-row items-center justify-center py-3 rounded-2xl bg-violet-600"
+                >
+                  <Ionicons name="layers" size={18} color="white" />
+                  <Text className="text-white font-bold ml-2">Flashcards</Text>
+                </TouchableOpacity>
+              )}
+            </View>
+          ) : null}
+          {Platform.OS !== 'web' && (
+            <TouchableOpacity
+              onPress={downloadPdf}
+              activeOpacity={0.8}
+              className="flex-1 flex-row items-center justify-center py-3 rounded-2xl bg-emerald-600"
+            >
+              <Ionicons name="document-text" size={18} color="white" />
+              <Text className="text-white font-bold ml-2">Download PDF</Text>
+            </TouchableOpacity>
+          )}
+        </View>
 
         <View className="mb-8">
           <Text style={{ ...baseStyle, lineHeight: 24 }}>{topic.content}</Text>
@@ -152,10 +172,17 @@ export default function TopicContentScreen() {
 
         {topic.images && topic.images.length > 0 && (
           <View className="mb-8">
-            <Text className="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-2">
+            <Text className="text-sm font-bold text-gray-400 dark:text-gray-500 uppercase tracking-widest mb-3">
               Diagrams
             </Text>
-            <Text className="italic text-gray-400 dark:text-gray-500">Diagrams available for this topic.</Text>
+            {topic.images.map((src, index) => (
+              <Image
+                key={index}
+                source={src}
+                contentFit="contain"
+                style={{ width: '100%', height: 240, borderRadius: 16, marginBottom: 12 }}
+              />
+            ))}
           </View>
         )}
 

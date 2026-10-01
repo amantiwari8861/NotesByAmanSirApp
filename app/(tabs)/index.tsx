@@ -1,7 +1,7 @@
 import React, { useCallback, useState } from 'react';
 import { View, Text, FlatList, TouchableOpacity, TextInput, Pressable } from 'react-native';
 import { SafeAreaView } from 'react-native-safe-area-context';
-import { useRouter, useFocusEffect } from 'expo-router';
+import { useRouter, useFocusEffect, type Href } from 'expo-router';
 import { Ionicons } from '@expo/vector-icons';
 import { NOTES_DATA, Subject } from '@/constants/NotesData';
 import { ProgressService } from '@/constants/ProgressService';
@@ -108,7 +108,7 @@ export default function HomeScreen() {
   };
 
   return (
-    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950">
+    <SafeAreaView className="flex-1 bg-white dark:bg-gray-950" edges={['top', 'left', 'right']}>
       <View className="px-5 pt-8 pb-4 flex-row items-center justify-between">
         <AppLogo size={42} />
         <ThemeToggle />
@@ -132,6 +132,24 @@ export default function HomeScreen() {
           )}
         </View>
       </View>
+
+      <TouchableOpacity
+        onPress={() => router.push('/videos' as Href)}
+        activeOpacity={0.85}
+        className="mb-6 mx-5 flex-row items-center p-4 rounded-2xl"
+        style={{ backgroundColor: '#8b5cf6' }}
+      >
+        <View className="w-11 h-11 rounded-full items-center justify-center" style={{ backgroundColor: 'rgba(255,255,255,0.22)' }}>
+          <Ionicons name="play-circle" size={24} color="white" />
+        </View>
+        <View className="flex-1 ml-3">
+          <Text className="text-white font-extrabold text-base">Video Lectures</Text>
+          <Text className="text-white text-xs mt-0.5" style={{ opacity: 0.85 }}>
+            Curated study videos for every subject
+          </Text>
+        </View>
+        <Ionicons name="chevron-forward" size={20} color="white" />
+      </TouchableOpacity>
 
       {/* Continue Learning */}
       {recentTopics.length > 0 && (
